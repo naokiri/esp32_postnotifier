@@ -1,0 +1,2 @@
+int wake_count;
+

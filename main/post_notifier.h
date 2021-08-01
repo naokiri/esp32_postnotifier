@@ -1,0 +1,2 @@
+#define SEC_TO_USEC 1000000
+#define HOUR_TO_USEC (3600 * SEC_TO_USEC)

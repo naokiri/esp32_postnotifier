@@ -1,0 +1,9 @@
+menu "Home Notification Configuration"
+
+    config ALERT_ENDPOINT
+        string "Alert notify endpoint"
+        default "http://192.168.0.1/do/alert"
+        help
+            Alert endpoint including http:// and get parameters if any.
+
+endmenu
