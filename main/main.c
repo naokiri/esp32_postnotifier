@@ -12,7 +12,6 @@
 #include "post_notifier.h"
 #include "wifi_initializer.h"
 #include "notifier.h"
-#include "battery_checker.h"
 #include <stdio.h>
 
 extern int wake_count;
@@ -34,16 +33,8 @@ void init_nvs() {
 
 void app_main(void) {
     ESP_LOGI(TAG, "Hello world %d-th time.", wake_count);
-    // Somehow LOG_LOCAL_LEVEL didn't work in latest master branch of esp-idf.
+    // Somehow LOG_LOCAL_LEVEL doesn't work.
     //esp_log_level_set(TAG, ESP_LOG_DEBUG);
-
-    uint32_t battery_voltage = get_battery_level();
-    if (battery_voltage < 2000) {
-        // Oh no. Halt to save the battery.
-        ESP_LOGI(TAG, "No more battery. Halting.");
-        return;
-    }
-
     init_hcsr04_gpio();
 
     if (wake_count > 0) {
@@ -72,6 +63,5 @@ void app_main(void) {
     fflush(stdout);
     wake_count++;
     esp_sleep_enable_timer_wakeup(7 * HOUR_TO_USEC);
-    // esp_sleep_enable_timer_wakeup(60 * SEC_TO_USEC);
     esp_deep_sleep_start();
 }
