@@ -6,7 +6,7 @@
 #include "HCSR04.h"
 #include "driver/gpio.h"
 
-#define TRIG_PIN 17
+#define TRIG_PIN 19
 #define ECHO_PIN 18
 
 /**

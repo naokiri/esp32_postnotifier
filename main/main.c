@@ -19,7 +19,10 @@ extern int wake_count;
 static const char *TAG = "PostNotifier";
 static TaskHandle_t xTaskToNotify;
 
-#define ALERT_THRESHOLD_M 0.2
+#define ALERT_THRESHOLD_M 0.15
+#define BATTERY_VOLTAGE_THRESHOLD_MV 3650
+
+#define BATTERY_CTRL_PIN 25
 
 void init_nvs() {
     esp_err_t ret = nvs_flash_init();
@@ -35,6 +38,17 @@ void app_main(void) {
     ESP_LOGI(TAG, "Hello world %d-th time.", wake_count);
     // Somehow LOG_LOCAL_LEVEL doesn't work.
     //esp_log_level_set(TAG, ESP_LOG_DEBUG);
+
+    init_battery_divider_gpio(BATTERY_CTRL_PIN);
+
+    uint32_t battery_voltage = get_battery_level();
+    if (battery_voltage < BATTERY_VOLTAGE_THRESHOLD_MV) {
+        // Oh no. Halt to save the battery.
+        ESP_LOGI(TAG, "No more battery. Halting.");
+        // esp_deep_sleep_start();
+        return;
+    }
+
     init_hcsr04_gpio();
 
     if (wake_count > 0) {
@@ -62,6 +76,9 @@ void app_main(void) {
     }
     fflush(stdout);
     wake_count++;
+
+    // vTaskDelay(10000);
     esp_sleep_enable_timer_wakeup(7 * HOUR_TO_USEC);
+    // esp_sleep_enable_timer_wakeup(20 * SEC_TO_USEC);
     esp_deep_sleep_start();
 }
