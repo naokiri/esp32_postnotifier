@@ -12,6 +12,7 @@
 #include "post_notifier.h"
 #include "wifi_initializer.h"
 #include "notifier.h"
+#include "battery_checker.h"
 #include <stdio.h>
 
 extern int wake_count;
